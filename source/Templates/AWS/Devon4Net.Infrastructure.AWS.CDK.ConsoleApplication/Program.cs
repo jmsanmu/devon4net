@@ -23,8 +23,6 @@ namespace Cdk
                 AwsRegion = args.Length == 2 ? args[1] : Environment.GetEnvironmentVariable("CDK_DEFAULT_REGION");
             }
 
-            #region AppSettings
-
             LoadConfigurationFiles();
 
             foreach (var stack in CdkOptions)
@@ -42,8 +40,6 @@ namespace Cdk
                 var defaultPsrovisionStack = new ProvisionStack(AwsAccount, AwsRegion, stack);
                 defaultPsrovisionStack.Process();
             }
-
-            #endregion
         }
 
         private static void LoadConfigurationFiles()

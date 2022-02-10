@@ -13,9 +13,7 @@ namespace Devon4Net.Infrastructure.AWS.SQS
     {
         public static void SetupSqs(this IServiceCollection services, IConfiguration configuration)
         {
-            var awsOptions = services.GetTypedOptions<AwsOptions>(configuration, ConfigurationConsts.AwsOptionsNodeName);
-
-            awsOptions.SqsOptions
+            services.GetTypedOptions<AwsOptions>(configuration, ConfigurationConsts.AwsOptionsNodeName);
         }
     }
 }

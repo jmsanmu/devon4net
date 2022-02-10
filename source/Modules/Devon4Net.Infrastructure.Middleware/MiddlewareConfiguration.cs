@@ -14,7 +14,6 @@ namespace Devon4Net.Infrastructure.Middleware.Middleware
 {
     public static class MiddlewareConfiguration
     {
-
         public static void SetupMiddleware(this IApplicationBuilder builder, IServiceCollection services)
         {
             using var serviceProvider = services.BuildServiceProvider();
@@ -31,10 +30,8 @@ namespace Devon4Net.Infrastructure.Middleware.Middleware
         public static void SetupMiddleware(this IServiceCollection services, IConfiguration configuration)
         {
             services.SetupHeaders(configuration);
-
             services.GetTypedOptions<KillSwitchOptions>(configuration, "KillSwitch");
             services.GetTypedOptions<CertificatesOptions>(configuration, "Certificates");
-
         }
     }
 }

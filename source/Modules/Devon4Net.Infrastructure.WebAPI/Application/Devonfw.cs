@@ -3,8 +3,12 @@ using Devon4Net.Infrastructure.Common.Common.IO;
 using Devon4Net.Infrastructure.Common.Handlers;
 using Devon4Net.Infrastructure.Common.Options.Devon;
 using Devon4Net.Infrastructure.Logger.Logging;
+using Devon4Net.Infrastructure.Middleware.Middleware;
+using Devon4Net.Infrastructure.Swagger;
 using Devon4Net.Infrastructure.WebAPI.Common.Attributes;
 using Devon4Net.Infrastructure.WebAPI.Configuration;
+using Google.Protobuf.WellKnownTypes;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,7 +48,7 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
             return builder;
         }
 
-        public static DevonfwOptions SetupDevonfw(this IServiceCollection services, IConfiguration configuration)
+        public static void SetupDevonfw(this IServiceCollection services, IConfiguration configuration)
         {
             DevonfwOptions = services.GetTypedOptions<DevonfwOptions>(configuration, DevonFwConst.OptionsNodeName);
 
@@ -61,8 +65,17 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
             if (DevonfwOptions.UseIIS) services.ConfigureIIS(DevonfwOptions.IIS);
 
             if (DevonfwOptions.UseXsrf) services.ConfigureXsrf();
+        }
 
-            return DevonfwOptions;
+        public static void SetupDevonfw(this IApplicationBuilder builder, IServiceCollection services)
+        {
+            builder.ConfigureSwaggerEndPoint();
+            builder.SetupMiddleware(services);
+            builder.SetupCors();
+            if (DevonfwOptions.ForceUseHttpsRedirection || (!DevonfwOptions.UseIIS && DevonfwOptions.Kestrel.UseHttps))
+            {
+                builder.UseHttpsRedirection();
+            }
         }
 
         private static void LoadConfiguration()

@@ -8,7 +8,6 @@ using Devon4Net.Infrastructure.Grpc;
 using Devon4Net.Infrastructure.Logger;
 using Devon4Net.Application.WebAPI.Implementation.Configuration;
 using Devon4Net.Application.WebAPI.Configuration.Application;
-using Devon4Net.Infrastructure.WebAPI.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +20,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 #region devon services
-var devonfwOptions =  builder.Services.SetupDevonfw(builder.Configuration);
+builder.Services.SetupDevonfw(builder.Configuration);
 builder.Services.SetupMiddleware(builder.Configuration);
 builder.Services.SetupLog(builder.Configuration);
 builder.Services.SetupSwagger(builder.Configuration);
@@ -40,13 +39,7 @@ builder.Services.SetupDevonDependencyInjection(builder.Configuration);
 var app = builder.Build();
 
 #region devon app
-app.ConfigureSwaggerEndPoint();
-app.SetupMiddleware(builder.Services);
-app.SetupCors();
-if (devonfwOptions.ForceUseHttpsRedirection || (!devonfwOptions.UseIIS && devonfwOptions.Kestrel.UseHttps))
-{
-    app.UseHttpsRedirection();
-}
+app.SetupDevonfw(builder.Services);
 #endregion
 
 app.UseStaticFiles();

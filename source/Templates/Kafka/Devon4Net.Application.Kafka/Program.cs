@@ -1,5 +1,4 @@
 using Devon4Net.Application.Kafka.Business.KafkaManagement.Handlers;
-using Devon4Net.Application.WebAPI.Configuration;
 using Devon4Net.Application.WebAPI.Configuration.Application;
 using Devon4Net.Infrastructure.Kafka;
 using Devon4Net.Infrastructure.Logger;
@@ -13,7 +12,7 @@ builder.WebHost.InitializeDevonFw();
 #region services
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-var devonfwOptions = builder.Services.SetupDevonfw(builder.Configuration);
+builder.Services.SetupDevonfw(builder.Configuration);
 builder.Services.SetupMiddleware(builder.Configuration);
 builder.Services.SetupLog(builder.Configuration);
 builder.Services.SetupSwagger(builder.Configuration);
@@ -25,13 +24,7 @@ builder.Services.AddKafkaConsumer<MessageConsumerHandler>("Consumer1");
 var app = builder.Build();
 
 #region devon app
-app.ConfigureSwaggerEndPoint();
-app.SetupMiddleware(builder.Services);
-app.SetupCors();
-if (devonfwOptions.ForceUseHttpsRedirection || (!devonfwOptions.UseIIS && devonfwOptions.Kestrel.UseHttps))
-{
-    app.UseHttpsRedirection();
-}
+app.SetupDevonfw(builder.Services);
 #endregion
 
 app.UseHttpsRedirection();

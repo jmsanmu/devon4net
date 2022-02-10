@@ -2,6 +2,7 @@
 using Devon4Net.Infrastructure.Common.Options.Cors;
 using Devon4Net.Infrastructure.Logger.Logging;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -31,11 +32,16 @@ namespace Devon4Net.Application.WebAPI.Configuration
 
         public static void SetupCors(this IApplicationBuilder builder)
         {
-            if (CorsOptions == null || CorsOptions.Count == 0) return;
-
-            foreach (var policy in CorsOptions.Select(c => c.CorsPolicy))
+            if (CorsOptions == null || CorsOptions.Count == 0)
             {
-                builder.UseCors(policy);
+                builder.UseCors("CorsPolicy");
+            }
+            else
+            {
+                foreach (var policy in CorsOptions.Select(c => c.CorsPolicy))
+                {
+                    builder.UseCors(policy);
+                }
             }
         }
 

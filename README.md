@@ -1,4 +1,4 @@
-# The DEV-ON time Platform for the .NET stack
+# The DEV-ON time Platform for the .net stack
 
 devon4net is a real Clean Architecture designed templates to build cloud native solutions (AWS Serverless/Lambda), microservices, WebAPI applications and protobuf applications. 
 
